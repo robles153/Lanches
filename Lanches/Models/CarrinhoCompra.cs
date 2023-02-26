@@ -1,4 +1,6 @@
 ﻿using Lanches.Context;
+using Lanches.Migrations;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lanches.Models
 {
@@ -12,7 +14,7 @@ namespace Lanches.Models
         }
 
         public string CarrinhoCompraId { get; set; }
-        public List<CarrinhoCompraItem> CarrinhoCompraitem { get; set; }
+        public List<CarrinhoCompraItem> CarrinhoCompraitems { get; set; }
 
         public static CarrinhoCompra GetCarrinho(IServiceProvider services)
         {
@@ -85,5 +87,15 @@ namespace Lanches.Models
             return quantidadeLocal;
             
         }
+
+        public List<CarrinhoCompraItem> GetCarrinhoCompraItens()
+        {
+            return CarrinhoCompraitems ?? (CarrinhoCompraitems =
+                _context.CarrinhoCompraItem
+                .Where(c => c.CarrinhoCompraId == CarrinhoCompraId)
+                .Include(s => s.Lanche)
+                .ToList());
+        }
+               
     }
 }
