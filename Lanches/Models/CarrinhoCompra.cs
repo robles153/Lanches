@@ -96,6 +96,24 @@ namespace Lanches.Models
                 .Include(s => s.Lanche)
                 .ToList());
         }
+
+        public void Limparcarrinho()
+        {
+            var carrinhoItens = _context.CarrinhoCompraItem
+                .Where(carrinho => carrinho.CarrinhoCompraId == CarrinhoCompraId);
+
+            _context.CarrinhoCompraItem.RemoveRange(carrinhoItens); 
+            _context.SaveChanges();
+        }
+
+        public decimal GetcarrinhoCompraTotal()
+        {
+            var total  = _context.CarrinhoCompraItem
+                .Where(c => c.CarrinhoCompraId == CarrinhoCompraId)
+                .Select(c => c.Lanche.Preco*c.Quantidade).Sum();
+
+            return total;
+        }
                
     }
 }
